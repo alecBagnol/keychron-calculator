@@ -1,65 +1,63 @@
+const operateString = (numString)=>{
+    const numArray = numString.split(re);
+    const opArray = numString.matchAll(re);
+    let total = parseFloat(numArray.shift());
+    for(const operation of opArray){
+        if(!numArray){
+            break;
+        }
+        switch (operation[0]) {
+            case '/':
+                total /= parseFloat(numArray.shift())
+                break;
+            case 'x':
+                total *= parseFloat(numArray.shift())
+                break;
+            case '-':
+                total -= parseFloat(numArray.shift())
+                break;
+            case '+':
+                total += parseFloat(numArray.shift())
+                break;        
+            default:
+                total %= parseFloat(numArray.shift())
+                break;
+        }
+    }
+    return total;
+}
+
 const keys = document.querySelectorAll(".key");
-const re = new RegExp('[CMx%\\-+=/\\*]+','g');
+const re = new RegExp('[x%\\-+/\\*]+','g');
+const reg = new RegExp('[CM=]+','g');
 let display = document.getElementById('calc--display');
 
 //The initial idea is to work individualy floats and integers
-let totalNum = 0;
-let floatNumber = 0;
-let memoryNum = "";
+let totalNum = '';
+let memNum = '';
 
-/* The float number mode describes if the user pushed the 
- point numeral and works on adding numbers to the working 
- number as float */
-let floatModeOn = false;
 
 [...keys].forEach(element => {
     element.addEventListener('click', ()=>{
         let key = element.innerText;
-        if(!re.test(key)){
-            if(key == "."){
-                floatModeOn = true;
-                return;
-            }
-            if(floatModeOn){
-                floatNumber *= 10;
-                floatNumber += parseInt(key);
-            }
-            else{
-                totalNum *= 10
-                totalNum += parseInt(key);
-            }
+        if(!reg.test(key)){
+            if(memNum && re.test(key)){
+                totalNum = memNum;
+            } 
+            !totalNum && key == '.' ? totalNum += '0.' : totalNum += key;
         }else{
-            memoryNum = floatModeOn ? `${totalNum}.${floatNumber}` : `${totalNum}`;
-            switch(key){
-                
-                case "C":
-                    totalNum = 0;
-                    floatNumber = 0;
-                    floatModeOn = false;
-                    break;
-                case "CM":
-                    break;
-                case "/":
-                    
-                    break;
-                case "x":
-                    break;
-                case "-":
-                    break;
-                case "+":
-                    break;
-                case "=":
-                    break;
-                default:
-                    break;
+            if(key == 'C' || key == 'MC'){
+                totalNum = '';
+                display.innerText = '0';
+                return;
+            }else{
+                totalNum = operateString(totalNum);
+                display.innerText = totalNum;
+                memNum = totalNum;
+                totalNum = '';
+                return
             }
         }
-        if(floatModeOn){
-            display.innerText = `${totalNum}.${floatNumber}`;
-            return;
-        }
-        display.innerText = `${totalNum}`;
-
-        
+        display.innerText = totalNum;
     })
 });
