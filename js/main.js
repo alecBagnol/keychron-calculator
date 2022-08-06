@@ -1,8 +1,18 @@
 const operateString = (numString)=>{
+    // debugger
     const numArray = numString.split(re);
-    const opArray = numString.matchAll(re);
-    let total = parseFloat(numArray.shift());
+    const opArray = [...numString.matchAll(re)];
+    if (opArray.length == 0){
+        return parseFloat(numString);
+    }
+    let total = 0;
+    if(opArray[0].index != 0){
+        total = parseFloat(numArray.shift());
+    }else{
+        numArray.shift();
+    }
     for(const operation of opArray){
+        
         if(!numArray){
             break;
         }
@@ -14,7 +24,7 @@ const operateString = (numString)=>{
                 total *= parseFloat(numArray.shift())
                 break;
             case '-':
-                total -= parseFloat(numArray.shift())
+                total += -parseFloat(numArray.shift())
                 break;
             case '+':
                 total += parseFloat(numArray.shift())
@@ -40,24 +50,34 @@ let memNum = '';
 [...keys].forEach(element => {
     element.addEventListener('click', ()=>{
         let key = element.innerText;
-        if(!reg.test(key)){
+        if(key != 'C' && key != 'MC' && key != '='){
             if(memNum && re.test(key)){
                 totalNum = memNum;
-            } 
-            !totalNum && key == '.' ? totalNum += '0.' : totalNum += key;
+            }
+            /* this conditional checks if the key '.' has been pushed 
+            before any other key, this way we push a '0' before said point key*/
+            !totalNum && !memNum && key == '.' ? totalNum += '0.' : totalNum += key;
+            display.innerText = totalNum;
         }else{
-            if(key == 'C' || key == 'MC'){
-                totalNum = '';
-                display.innerText = '0';
-                return;
-            }else{
-                totalNum = operateString(totalNum);
+            if(key == '='){
+                if(totalNum == ''){
+                    totalNum = memNum;
+                    return;
+                }else{
+                    totalNum = operateString(`${totalNum}`);
+                }
+                
                 display.innerText = totalNum;
                 memNum = totalNum;
                 totalNum = '';
-                return
+            }else{
+                if(key == 'MC'){
+                    memNum = '';
+                }
+                totalNum = '';
+                display.innerText = '0';
             }
         }
-        display.innerText = totalNum;
+        
     })
 });
