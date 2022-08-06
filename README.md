@@ -4,6 +4,6 @@ A calculator inspired by the [MechaCalc by Afrills](https://dribbble.com/shots/1
 It's design and color signature shares similar key points with Keychron's keyboard.
 
 <p align="center">
-    <img alt="alt_text" width="100%" style="max-width: 600px" src="media/calculator-capture.png" />
+    <img alt="alt_text" width="100%" style="max-width: 600px" src="media/calculator-capture.png"/>
 </p>
 
